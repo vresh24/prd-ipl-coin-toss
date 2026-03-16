@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <title>Bistro × IPL Toss</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    :root{
+      --bg:#0a0a0a;
+      --card:#161616;
+      --card2:#1e1e1e;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --gold:#f5a623;
+      --text:rgba(255,255,255,1);
+      --text2:rgba(255,255,255,0.55);
+      --text3:rgba(255,255,255,0.25);
+      --r:18px;
+    }
+    html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
+      font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;
+      color:var(--text);-webkit-font-smoothing:antialiased;}
+
+    .app{display:flex;flex-direction:column;height:100%;max-width:430px;
+         margin:0 auto;position:relative;overflow:hidden;}
+
+    /* ── BG ── */
+    .bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+    .bg-glow1{position:absolute;width:300px;height:300px;border-radius:50%;
+      background:radial-gradient(circle,rgba(34,197,94,0.08) 0%,transparent 70%);
+      top:-80px;left:-60px;}
+    .bg-glow2{position:absolute;width:260px;height:260px;border-radius:50%;
+      background:radial-gradient(circle,rgba(245,166,35,0.07) 0%,transparent 70%);
+      top:30px;right:-50px;}
+    .field-ring{position:absolute;width:480px;height:220px;border-radius:50%;
+      border:1px solid rgba(34,197,94,0.07);bottom:195px;left:50%;transform:translateX(-50%);}
+
+    /* ── HEADER ── */
+    .header{position:relative;z-index:10;display:flex;align-items:center;
+      justify-content:space-between;padding:14px 16px 10px;}
+    .logo{display:flex;flex-direction:column;gap:0;}
+    .logo-top{display:flex;align-items:center;gap:6px;}
+    .logo-icon{width:30px;height:30px;border-radius:9px;
+      background:var(--green);display:flex;align-items:center;justify-content:center;font-size:15px;}
+    .logo-name{font-size:22px;font-weight:900;font-style:italic;color:#fff;letter-spacing:-1px;}
+    .logo-sub{font-size:9px;font-weight:700;color:var(--green);letter-spacing:2px;
+      text-transform:uppercase;padding-left:36px;margin-top:-2px;}
+    .header-badges{display:flex;align-items:center;gap:7px;}
+    .badge-ipl{display:flex;align-items:center;gap:4px;background:rgba(245,166,35,0.1);
+      border:1px solid rgba(245,166,35,0.25);border-radius:50px;padding:4px 9px 4px 6px;}
+    .badge-ipl-icon{font-size:11px;}
+    .badge-ipl-text{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:0.5px;}
+    .badge-live{display:flex;align-items:center;gap:4px;background:rgba(34,197,94,0.1);
+      border:1px solid rgba(34,197,94,0.25);border-radius:50px;padding:4px 9px;}
+    .live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);
+      animation:blink 1.3s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+    .live-text{font-size:10px;font-weight:800;color:var(--green);letter-spacing:1px;}
+
+    /* ── MATCH CARD ── */
+    .match-card{position:relative;z-index:10;margin:0 14px;
+      background:var(--card);border-radius:var(--r);
+      border:1px solid rgba(255,255,255,0.06);overflow:hidden;}
+    .match-top{display:flex;align-items:center;padding:14px 14px 10px;}
+    .mt{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+    .team-ball{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;
+      justify-content:center;font-size:12px;font-weight:900;color:#fff;
+      text-shadow:0 1px 4px rgba(0,0,0,0.6);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
+    .team-city{font-size:11px;font-weight:600;color:var(--text2);}
+    .match-mid{padding:0 12px;display:flex;flex-direction:column;align-items:center;gap:2px;}
+    .vs{font-size:10px;font-weight:900;color:var(--text3);letter-spacing:2px;}
+    .venue{font-size:9px;color:var(--text3);text-align:center;line-height:1.4;}
+    /* Green delivery bar */
+    .delivery-bar{display:flex;align-items:center;justify-content:space-between;
+      background:rgba(34,197,94,0.08);border-top:1px solid rgba(34,197,94,0.12);
+      padding:8px 14px;}
+    .db-left{display:flex;align-items:center;gap:6px;}
+    .db-icon{font-size:13px;}
+    .db-text{font-size:11px;color:var(--text2);}
+    .db-text b{color:#fff;font-weight:700;}
+    .db-eta{font-size:11px;font-weight:800;color:var(--green);}
+
+    /* ── COIN CANVAS AREA ── */
+    .coin-area{position:relative;z-index:10;flex:1;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    #coinCanvas{display:block;}
+    .toss-line{font-size:14px;font-weight:700;color:var(--gold);letter-spacing:0.5px;
+      min-height:22px;text-align:center;margin-top:6px;}
+
+    /* ── BOTTOM SHEET ── */
+    .bottom-sheet{position:relative;z-index:10;background:var(--card);
+      border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,0.06);
+      padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 20px);}
+    .sh{width:32px;height:4px;background:rgba(255,255,255,0.1);
+      border-radius:2px;margin:0 auto 14px;}
+
+    /* Offer teaser */
+    .offer-teaser{display:flex;align-items:center;gap:10px;
+      background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.15);
+      border-radius:12px;padding:9px 12px;margin-bottom:13px;}
+    .ot-icon{font-size:20px;flex-shrink:0;}
+    .ot-text{font-size:12px;color:var(--text2);line-height:1.45;}
+    .ot-text b{color:#fff;}
+    .ot-chevron{margin-left:auto;font-size:14px;color:var(--text3);flex-shrink:0;}
+
+    .call-lbl{font-size:10px;font-weight:700;color:var(--text3);
+      letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;text-align:center;}
+    .call-row{display:flex;gap:9px;margin-bottom:11px;}
+    .chip{flex:1;height:50px;border:1.5px solid rgba(255,255,255,0.1);border-radius:13px;
+      background:var(--card2);color:var(--text2);font-size:15px;font-weight:700;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+      transition:transform .1s,background .15s,border-color .15s,color .15s;user-select:none;}
+    .chip:active{transform:scale(0.96);}
+    .chip.on{background:rgba(34,197,94,0.12);border-color:var(--green);color:var(--green);}
+    .chip .ci{font-size:18px;}
+
+    .toss-btn{width:100%;height:52px;background:var(--green);
+      border:none;border-radius:14px;color:#fff;font-size:16px;font-weight:900;
+      letter-spacing:0.3px;cursor:pointer;
+      transition:transform .1s,opacity .15s,filter .15s;
+      box-shadow:0 8px 22px rgba(34,197,94,0.35);user-select:none;}
+    .toss-btn:active:not(:disabled){transform:scale(0.97);filter:brightness(0.9);}
+    .toss-btn:disabled{opacity:0.3;cursor:default;box-shadow:none;}
+
+    /* ── RESULT SHEET ── */
+    .result-overlay{position:absolute;inset:0;z-index:50;
+      display:flex;flex-direction:column;justify-content:flex-end;
+      pointer-events:none;opacity:0;transition:opacity .3s;}
+    .result-overlay.show{pointer-events:all;opacity:1;}
+    .r-scrim{position:absolute;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);}
+    .r-sheet{position:relative;z-index:1;background:var(--card);
+      border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,0.08);
+      padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 24px);
+      transform:translateY(100%);
+      transition:transform .42s cubic-bezier(0.34,1.15,0.64,1);}
+    .result-overlay.show .r-sheet{transform:translateY(0);}
+    .r-handle{width:32px;height:4px;background:rgba(255,255,255,0.12);
+      border-radius:2px;margin:0 auto 14px;}
+
+    /* Commentary */
+    .commentary{background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.06);
+      border-left:3px solid var(--green);
+      border-radius:0 10px 10px 0;padding:9px 12px;margin-bottom:14px;
+      font-size:13px;color:var(--text2);line-height:1.5;font-style:italic;}
+    .commentary b{color:#fff;font-style:normal;}
+
+    /* Win card */
+    .win-card{background:#0f2a18;border:1px solid rgba(34,197,94,0.2);
+      border-radius:18px;padding:16px;position:relative;overflow:hidden;
+      animation:pop .4s cubic-bezier(0.34,1.4,0.64,1) forwards;}
+    @keyframes pop{from{transform:scale(0.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+    .win-card::before{content:'🥭';position:absolute;font-size:100px;
+      opacity:0.07;right:-12px;top:-8px;}
+    .win-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .win-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
+      border-radius:50px;font-size:10px;font-weight:800;letter-spacing:0.5px;}
+    .win-label{background:var(--green);color:#fff;font-size:9px;font-weight:800;
+      padding:4px 11px;border-radius:50px;letter-spacing:1px;text-transform:uppercase;}
+    .win-main{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+    .mango{font-size:50px;flex-shrink:0;}
+    .win-title{font-size:20px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:3px;}
+    .win-desc{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.5;}
+    .win-desc b{color:#fff;}
+    /* Code box */
+    .code-row{display:flex;align-items:center;justify-content:space-between;
+      background:rgba(34,197,94,0.08);border:1.5px dashed rgba(34,197,94,0.4);
+      border-radius:12px;padding:10px 13px;margin-bottom:8px;cursor:pointer;}
+    .code-row:active{background:rgba(34,197,94,0.14);}
+    .code-lbl{font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1px;
+      text-transform:uppercase;margin-bottom:1px;}
+    .code-val{font-size:22px;font-weight:900;color:var(--green);letter-spacing:4px;}
+    .copy-btn{background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);
+      border-radius:8px;padding:5px 10px;font-size:10px;font-weight:700;color:var(--green);
+      cursor:pointer;white-space:nowrap;}
+    .win-note{font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:13px;}
+    .order-btn{width:100%;height:48px;background:var(--green);border:none;
+      border-radius:13px;color:#fff;font-size:15px;font-weight:900;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+      box-shadow:0 6px 18px rgba(34,197,94,0.35);transition:transform .1s,filter .15s;}
+    .order-btn:active{transform:scale(0.97);filter:brightness(0.9);}
+
+    /* Loss card */
+    .loss-card{text-align:center;padding:6px 4px;
+      animation:pop .4s cubic-bezier(0.34,1.4,0.64,1) forwards;}
+    .loss-icon{font-size:50px;display:block;margin-bottom:11px;}
+    .loss-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;}
+    .loss-desc{font-size:13px;color:var(--text2);line-height:1.6;}
+    .loss-desc b{color:#fff;}
+
+    .retry-btn{width:100%;height:50px;background:rgba(255,255,255,0.07);
+      border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;
+      font-size:15px;font-weight:700;cursor:pointer;margin-top:15px;
+      transition:transform .1s,background .15s;user-select:none;}
+    .retry-btn:active{transform:scale(0.97);background:rgba(255,255,255,0.12);}
+
+    /* Confetti */
+    .cp{position:fixed;top:-12px;animation:cf linear forwards;pointer-events:none;z-index:999;}
+    @keyframes cf{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="bg">
+    <div class="bg-glow1"></div>
+    <div class="bg-glow2"></div>
+    <div class="field-ring"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-top">
+        <div class="logo-icon">🍽️</div>
+        <span class="logo-name">bistro</span>
+      </div>
+      <div class="logo-sub">by blinkit</div>
+    </div>
+    <div class="header-badges">
+      <div class="badge-ipl">
+        <span class="badge-ipl-icon">🏆</span>
+        <span class="badge-ipl-text">IPL 2026</span>
+      </div>
+      <div class="badge-live">
+        <div class="live-dot"></div>
+        <span class="live-text">LIVE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match card -->
+  <div class="match-card">
+    <div class="match-top">
+      <div class="mt">
+        <div class="team-ball" id="ball1"></div>
+        <div class="team-city" id="city1"></div>
+      </div>
+      <div class="match-mid">
+        <div class="vs">VS</div>
+        <div class="venue" id="venue"></div>
+      </div>
+      <div class="mt">
+        <div class="team-ball" id="ball2"></div>
+        <div class="team-city" id="city2"></div>
+      </div>
+    </div>
+    <div class="delivery-bar">
+      <div class="db-left">
+        <span class="db-icon">🛵</span>
+        <span class="db-text">Order during match · <b>Free delivery</b> above ₹199</span>
+      </div>
+      <span class="db-eta" id="eta"></span>
+    </div>
+  </div>
+
+  <!-- Coin canvas -->
+  <div class="coin-area" id="coinArea">
+    <canvas id="coinCanvas"></canvas>
+    <div class="toss-line" id="tossLine"></div>
+  </div>
+
+  <!-- Bottom sheet -->
+  <div class="bottom-sheet">
+    <div class="sh"></div>
+    <div class="offer-teaser">
+      <span class="ot-icon">🥭</span>
+      <div class="ot-text">Call the toss right &amp; get a <b>Free Mango Shake</b> on orders above ₹199!</div>
+      <span class="ot-chevron">›</span>
+    </div>
+    <div class="call-lbl">Your Call</div>
+    <div class="call-row">
+      <button class="chip" id="chipH" onclick="pick('heads')"><span class="ci">👑</span>Heads</button>
+      <button class="chip" id="chipT" onclick="pick('tails')"><span class="ci">🦁</span>Tails</button>
+    </div>
+    <button class="toss-btn" id="tossBtn" onclick="doToss()" disabled>Toss the Coin 🪙</button>
+  </div>
+
+  <!-- Result overlay -->
+  <div class="result-overlay" id="resultOverlay">
+    <div class="r-scrim"></div>
+    <div class="r-sheet">
+      <div class="r-handle"></div>
+      <div class="commentary" id="commentary"></div>
+      <div id="resultContent"></div>
+      <button class="retry-btn" onclick="reset()">🔄 Toss Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TEAMS = [
+  {abbr:'MI',  name:'Mumbai Indians',        city:'Mumbai',    bg:'linear-gradient(135deg,#004BA0,#0068e0)',c:'#3a80ff'},
+  {abbr:'CSK', name:'Chennai Super Kings',   city:'Chennai',   bg:'linear-gradient(135deg,#c89500,#ffcc00)',c:'#e6b800'},
+  {abbr:'RCB', name:'Royal Challengers',     city:'Bangalore', bg:'linear-gradient(135deg,#a00010,#EC1C24)',c:'#EC1C24'},
+  {abbr:'KKR', name:'Kolkata Knight Riders', city:'Kolkata',   bg:'linear-gradient(135deg,#3B1F5E,#7040b0)',c:'#9a60e0'},
+  {abbr:'SRH', name:'Sunrisers Hyderabad',   city:'Hyderabad', bg:'linear-gradient(135deg,#c07000,#F7A721)',c:'#F7A721'},
+  {abbr:'DC',  name:'Delhi Capitals',        city:'Delhi',     bg:'linear-gradient(135deg,#0044aa,#EF3340)',c:'#4488ff'},
+  {abbr:'PBKS',name:'Punjab Kings',          city:'Mohali',    bg:'linear-gradient(135deg,#990010,#EE1F25)',c:'#ff4455'},
+  {abbr:'RR',  name:'Rajasthan Royals',      city:'Jaipur',    bg:'linear-gradient(135deg,#2D368C,#E8529A)',c:'#E8529A'},
+  {abbr:'GT',  name:'Gujarat Titans',        city:'Ahmedabad', bg:'linear-gradient(135deg,#1C1F6B,#4055cc)',c:'#7088ff'},
+  {abbr:'LSG', name:'Lucknow Super Giants',  city:'Lucknow',   bg:'linear-gradient(135deg,#0f2044,#0090cc)',c:'#00b8f0'},
+];
+const VENUES = ['Wankhede','Eden Gardens','Chepauk','Chinnaswamy','Narendra Modi Stadium','Arun Jaitley'];
+const ETAS   = ['18 mins','22 mins','25 mins','20 mins'];
+
+let t1, t2, chosen = null, spinning = false;
+
+// ── Canvas setup ──
+const canvas = document.getElementById('coinCanvas');
+const ctx    = canvas.getContext('2d');
+const dpr    = window.devicePixelRatio || 1;
+const R      = 68; // coin radius in CSS px
+let cW, cH, cx, cy0; // canvas logical dimensions, coin resting centre
+
+function resizeCanvas() {
+  const area = document.getElementById('coinArea');
+  const rect  = area.getBoundingClientRect();
+  cW = rect.width;
+  cH = rect.height - 32; // leave room for toss line
+  canvas.style.width  = cW + 'px';
+  canvas.style.height = cH + 'px';
+  canvas.width  = cW * dpr;
+  canvas.height = cH * dpr;
+  ctx.scale(dpr, dpr);
+  cx  = cW / 2;
+  cy0 = cH * 0.58;
+}
+
+// ── Draw coin ──
+// scaleX: -1..1 (negative = tails face showing)
+function drawFrame(cyPos, scaleX) {
+  ctx.clearRect(0, 0, cW, cH);
+
+  const absX = Math.abs(scaleX);
+  const isH  = scaleX >= 0;
+  const team = isH ? t1 : t2;
+
+  // Shadow (stays on ground, shrinks when coin is high)
+  const heightRatio = 1 - Math.max(0, (cy0 - cyPos)) / (cy0 * 0.85);
+  const sScale = 0.3 + 0.7 * heightRatio;
+  ctx.save();
+  ctx.globalAlpha = 0.45 * sScale;
+  const sg = ctx.createRadialGradient(cx, cy0 + R*0.9, 0, cx, cy0 + R*0.9, R * 1.2);
+  sg.addColorStop(0, 'rgba(0,0,0,0.9)');
+  sg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.ellipse(cx, cy0 + R*0.88, R * 1.2 * sScale, R * 0.28 * sScale, 0, 0, Math.PI*2);
+  ctx.fillStyle = sg;
+  ctx.fill();
+  ctx.restore();
+
+  if (absX < 0.04) {
+    // Show coin edge (thin)
+    ctx.save();
+    ctx.fillStyle = '#8B6400';
+    ctx.beginPath();
+    ctx.roundRect(cx - 5, cyPos - R, 10, R*2, 3);
+    ctx.fill();
+    ctx.restore();
+    return;
+  }
+
+  ctx.save();
+  ctx.translate(cx, cyPos);
+  ctx.scale(absX, 1); // compress X to simulate rotation
+
+  // Coin thickness/edge (3D depth effect)
+  const edgeY = R * 0.07 * absX;
+  const edgeCol = isH ? '#7a5200' : '#6a4a00';
+  ctx.beginPath();
+  ctx.arc(0, edgeY * 0.6, R, 0, Math.PI*2);
+  ctx.fillStyle = edgeCol;
+  ctx.fill();
+
+  // Main face gradient
+  const g = ctx.createRadialGradient(-R*0.28, -R*0.32, R*0.04, 0, 0, R*1.15);
+  if (isH) {
+    g.addColorStop(0, '#fff4a0');
+    g.addColorStop(0.25, '#f0c030');
+    g.addColorStop(0.6,  '#d4a017');
+    g.addColorStop(1,    '#9a7010');
+  } else {
+    g.addColorStop(0, '#f8e490');
+    g.addColorStop(0.25, '#e0b020');
+    g.addColorStop(0.6,  '#c49020');
+    g.addColorStop(1,    '#8a6010');
+  }
+  ctx.beginPath();
+  ctx.arc(0, 0, R, 0, Math.PI*2);
+  ctx.fillStyle = g;
+  ctx.fill();
+
+  // Inner ring
+  ctx.beginPath();
+  ctx.arc(0, 0, R * 0.86, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 1.8;
+  ctx.stroke();
+
+  // Team text (only when face is sufficiently visible)
+  if (absX > 0.2) {
+    const fade = Math.min(1, (absX - 0.2) / 0.3);
+    ctx.globalAlpha = fade;
+    // Abbr
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.font = `900 ${Math.round(R * 0.38)}px -apple-system, "SF Pro Display", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(team.abbr, 0, R * 0.12);
+    // Sub label
+    ctx.font = `700 ${Math.round(R * 0.145)}px -apple-system, sans-serif`;
+    ctx.fillStyle = 'rgba(0,0,0,0.38)';
+    ctx.fillText(isH ? 'HEADS' : 'TAILS', 0, R * 0.38);
+    ctx.globalAlpha = 1;
+  }
+
+  // Specular highlight (moves slightly as coin rotates)
+  const specX = -R * 0.3 - absX * R * 0.1;
+  const specY = -R * 0.38;
+  const sp = ctx.createRadialGradient(specX, specY, 0, specX * 0.4, specY * 0.6, R * 0.85);
+  sp.addColorStop(0, 'rgba(255,255,255,0.5)');
+  sp.addColorStop(0.35, 'rgba(255,255,255,0.12)');
+  sp.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.beginPath();
+  ctx.arc(0, 0, R, 0, Math.PI*2);
+  ctx.fillStyle = sp;
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// ── Animation ──
+let raf, animStart, tossResult;
+
+function startCoinAnim(result) {
+  tossResult = result;
+  animStart = null;
+
+  // Total angle: heads → 18π (9 full rotations, cos=1), tails → 19π (9.5, cos=-1)
+  const totalAngle = result === 'heads' ? 18 * Math.PI : 19 * Math.PI;
+  const DURATION   = 2800; // ms
+  const PEAK       = cy0 * 0.82; // how high the coin goes (from top of canvas)
+
+  function tick(ts) {
+    if (!animStart) animStart = ts;
+    const elapsed = ts - animStart;
+    const p = Math.min(elapsed / DURATION, 1);
+
+    // ── Vertical arc ──
+    let yPos;
+    if (p < 0.82) {
+      // Smooth parabola up and down: sin curve for natural arc
+      const ap = p / 0.82;
+      yPos = cy0 - (cy0 - PEAK) * Math.sin(ap * Math.PI);
+    } else {
+      // Landing: small damped bounce
+      const bp = (p - 0.82) / 0.18;
+      const bounce = Math.sin(bp * Math.PI * 2.8) * (1 - bp) * 14;
+      yPos = cy0 + bounce;
+    }
+
+    // ── Rotation: fast in air, ease out on landing ──
+    let angleP;
+    if (p < 0.78) {
+      // Fast spin: ease-in to constant speed
+      angleP = p < 0.15
+        ? (p / 0.15) * (p / 0.15) * 0.12
+        : 0.12 + (p - 0.15) / 0.63 * 0.78;
+    } else {
+      // Slow to stop
+      const sp2 = (p - 0.78) / 0.22;
+      angleP = 0.90 + 0.10 * (1 - Math.pow(1 - sp2, 3));
+    }
+    const angle  = angleP * totalAngle;
+    const scaleX = Math.cos(angle);
+
+    drawFrame(yPos, scaleX);
+
+    if (p < 1) {
+      raf = requestAnimationFrame(tick);
+    } else {
+      // Final settled draw
+      drawFrame(cy0, result === 'heads' ? 1 : -1);
+      onAnimDone();
+    }
+  }
+  raf = requestAnimationFrame(tick);
+}
+
+function onAnimDone() {
+  const winTeam = tossResult === 'heads' ? t1 : t2;
+  document.getElementById('tossLine').textContent =
+    (tossResult === 'heads' ? '👑' : '🦁') + ' ' + winTeam.abbr + ' wins the toss!';
+  setTimeout(() => showResult(tossResult === chosen, tossResult), 600);
+}
+
+// ── Game logic ──
+function init() {
+  const s = [...TEAMS].sort(() => Math.random() - 0.5);
+  t1 = s[0]; t2 = s[1];
+
+  const b1 = document.getElementById('ball1');
+  b1.style.background = t1.bg; b1.textContent = t1.abbr;
+  document.getElementById('city1').textContent = t1.city;
+
+  const b2 = document.getElementById('ball2');
+  b2.style.background = t2.bg; b2.textContent = t2.abbr;
+  document.getElementById('city2').textContent = t2.city;
+
+  document.getElementById('venue').textContent = VENUES[Math.floor(Math.random()*VENUES.length)];
+  document.getElementById('eta').textContent   = ETAS[Math.floor(Math.random()*ETAS.length)];
+
+  // Draw resting coin (heads face)
+  setTimeout(() => drawFrame(cy0, 1), 0);
+}
+
+function pick(side) {
+  if (spinning) return;
+  chosen = side;
+  document.getElementById('chipH').classList.toggle('on', side === 'heads');
+  document.getElementById('chipT').classList.toggle('on', side === 'tails');
+  document.getElementById('tossBtn').disabled = false;
+}
+
+function doToss() {
+  if (!chosen || spinning) return;
+  spinning = true;
+  document.getElementById('tossBtn').disabled = true;
+  document.getElementById('chipH').disabled = true;
+  document.getElementById('chipT').disabled = true;
+  document.getElementById('tossLine').textContent = '';
+
+  const result = Math.random() < 0.5 ? 'heads' : 'tails';
+  startCoinAnim(result);
+}
+
+function showResult(won, result) {
+  const winTeam  = result === 'heads' ? t1 : t2;
+  const election = Math.random() < 0.5 ? 'bat first' : 'bowl first';
+
+  document.getElementById('commentary').innerHTML =
+    `"<b>${winTeam.name}</b> win the toss and elect to <b>${election}</b>."`;
+
+  const el = document.getElementById('resultContent');
+  if (won) {
+    el.innerHTML = `
+      <div class="win-card">
+        <div class="win-top">
+          <div class="win-tag" style="background:${winTeam.c}22;border:1px solid ${winTeam.c}44;color:${winTeam.c}">
+            ${winTeam.abbr} · Correct Call ✓
+          </div>
+          <div class="win-label">Fan Reward</div>
+        </div>
+        <div class="win-main">
+          <span class="mango">🥭</span>
+          <div>
+            <div class="win-title">Free Mango Shake!</div>
+            <div class="win-desc">On your next order above <b>₹199/-</b>.<br>Delivered in <b>${document.getElementById('eta').textContent}</b>.</div>
+          </div>
+        </div>
+        <div class="code-row" id="codeRow">
+          <div><div class="code-lbl">Promo Code</div><div class="code-val">IPLTOSS26</div></div>
+          <div class="copy-btn" id="copyBtn">Copy</div>
+        </div>
+        <div class="win-note">Valid today only · Min. order ₹199 · T&C apply</div>
+        <button class="order-btn"><span>🛒</span>Order Now on Bistro</button>
+      </div>`;
+    document.getElementById('codeRow').addEventListener('click', () => {
+      navigator.clipboard?.writeText('IPLTOSS26');
+      const b = document.getElementById('copyBtn');
+      b.textContent = '✓ Copied';
+      setTimeout(() => b.textContent = 'Copy', 2000);
+    });
+    launchConfetti(winTeam.c);
+  } else {
+    el.innerHTML = `
+      <div class="loss-card">
+        <span class="loss-icon">🏏</span>
+        <div class="loss-title">Not quite!</div>
+        <div class="loss-desc">
+          You called <b>${chosen === 'heads' ? t1.abbr : t2.abbr}</b> but
+          <b>${winTeam.name}</b> won the toss.<br><br>
+          Try again — your mango shake is one toss away!
+        </div>
+      </div>`;
+  }
+  document.getElementById('resultOverlay').classList.add('show');
+}
+
+function reset() {
+  spinning = false; chosen = null;
+  cancelAnimationFrame(raf);
+  document.getElementById('resultOverlay').classList.remove('show');
+  document.getElementById('tossLine').textContent = '';
+  document.getElementById('chipH').disabled = false;
+  document.getElementById('chipT').disabled = false;
+  document.getElementById('chipH').classList.remove('on');
+  document.getElementById('chipT').classList.remove('on');
+  document.getElementById('tossBtn').disabled = true;
+  init();
+}
+
+function launchConfetti(color) {
+  const p = [color,'#22c55e','#f5a623','#ffffff','#ffd700'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'cp';
+    el.style.cssText = `left:${Math.random()*100}vw;
+      background:${p[Math.floor(Math.random()*p.length)]};
+      width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      animation-duration:${Math.random()*2.2+2}s;
+      animation-delay:${Math.random()*.5}s;`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+}
+
+// ── Boot ──
+window.addEventListener('load', () => {
+  resizeCanvas();
+  init();
+});
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  if (!spinning) drawFrame(cy0, 1);
+});
+</script>
+</body>
+</html>
