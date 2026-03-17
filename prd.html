@@ -309,8 +309,8 @@
           <li>Entry: from Cart only</li>
           <li>Shows Active, Used, Expired rewards</li>
           <li>Sorted: Won today → recency</li>
-          <li>User can select up to 2 offers to apply</li>
-          <li>2 freebies OR 1 BOGO + 1 freebie</li>
+          <li>Unlimited offers can be applied per order</li>
+          <li>Multiple BOGOs can be used simultaneously</li>
           <li>Selected rewards reflect on Cart</li>
           <li>Empty state: "Tune in tomorrow to play and win"</li>
         </ul>
@@ -320,18 +320,18 @@
 
   <div class="section">
     <h2>Key Constraints</h2>
-    <div class="callout callout-error">
-      <div class="callout-icon">🚫</div>
+    <div class="callout callout-info">
+      <div class="callout-icon">✅</div>
       <div class="callout-content">
-        <div class="callout-title">CR = 0 Users Excluded</div>
-        <div class="callout-body">The game is NOT available for CR = 0 users. When a user transitions from CR=0 → CR=1, feed and all pages must update instantly to show game entry points.</div>
+        <div class="callout-title">CR = 0 Users Are Eligible</div>
+        <div class="callout-body">CR = 0 users can play the game. When a user transitions from CR=0 → CR=1, feed and all pages must update instantly to show game entry points (FAB animation, PT callout if applicable).</div>
       </div>
     </div>
-    <div class="callout callout-warn">
-      <div class="callout-icon">⚠️</div>
+    <div class="callout callout-info">
+      <div class="callout-icon">✅</div>
       <div class="callout-content">
-        <div class="callout-title">Cannot Stack with BISTRO50</div>
-        <div class="callout-body">Game rewards cannot be applied alongside the BISTRO50 coupon code. This must be enforced at cart/checkout.</div>
+        <div class="callout-title">Stackable with BISTRO50 &amp; 50% Off</div>
+        <div class="callout-body">Game rewards (freebies and BOGOs) can be applied alongside BISTRO50 and any 50% off promo codes. No stacking restriction at cart.</div>
       </div>
     </div>
     <div class="callout callout-info">
@@ -344,8 +344,8 @@
     <div class="callout callout-info">
       <div class="callout-icon">📣</div>
       <div class="callout-content">
-        <div class="callout-title">PT Callout Duration</div>
-        <div class="callout-body">The Promised Time (PT) game call-to-action is shown only during Week 1 of IPL. After that, PT reverts to normal grid layout.</div>
+        <div class="callout-title">PT Banner — Always On During Off-Match Hours</div>
+        <div class="callout-body">The Promised Time (PT) banner for the upcoming game start is shown at all times during off-match hours — not just Week 1. After Week 1, PT reverts to normal grid during active match hours only.</div>
       </div>
     </div>
   </div>
@@ -567,7 +567,8 @@
         <div class="surface-card">
           <div class="surface-name">Feed (PT)</div>
           <div class="surface-items">
-            <div class="surface-none">Normal grid, no callout</div>
+            <div class="surface-item">PT banner: next game start time</div>
+            <div class="surface-item">Always visible during off-match hours</div>
           </div>
         </div>
         <div class="surface-card">
@@ -719,7 +720,8 @@
         <div class="surface-card">
           <div class="surface-name">Feed (PT)</div>
           <div class="surface-items">
-            <div class="surface-none">Normal grid, no callout</div>
+            <div class="surface-item">PT banner: next game start time</div>
+            <div class="surface-item">Always visible during off-match hours</div>
           </div>
         </div>
         <div class="surface-card">
@@ -834,7 +836,11 @@
         </div>
         <div class="spec-row">
           <div class="spec-num">5</div>
-          <div><div class="spec-label">Offer stacking rule</div><div class="spec-desc">Cannot combine game rewards with BISTRO50 coupon.</div></div>
+          <div><div class="spec-label">Offer stacking rule</div><div class="spec-desc">Game rewards can be combined with BISTRO50 and 50% off promos. No stacking restriction.</div></div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-num">6</div>
+          <div><div class="spec-label">BOGO won — product cards</div><div class="spec-desc">When a BOGO is won, eligible product cards in the catalogue should display a BOGO badge/indicator so users know which items qualify.</div></div>
         </div>
       </div>
     </div>
@@ -852,7 +858,7 @@
         </div>
         <div class="spec-row">
           <div class="spec-num">3</div>
-          <div><div class="spec-label">Selection Rules</div><div class="spec-desc">Max 2 offers: 2 freebies OR 1 BOGO + 1 freebie. Selected offers reflect on Cart.</div></div>
+          <div><div class="spec-label">Selection Rules</div><div class="spec-desc">Unlimited offers can be applied. Multiple BOGOs supported. Selected offers reflect on Cart.</div></div>
         </div>
         <div class="spec-row">
           <div class="spec-num">4</div>
@@ -865,10 +871,10 @@
       <div class="card">
         <div class="card-title"><div class="card-icon" style="background:rgba(255,107,0,.15)">📣</div>Feed PT (Promised Time)</div>
         <ul class="bullet-list">
-          <li><strong>Week 1 only:</strong> Show rewards + Toss &amp; Win CTA "Play Now" → Game Page (first-time users only)</li>
-          <li>After Week 1: revert to normal PT grid</li>
-          <li>Users who've played: normal grid, no callout</li>
-          <li>Game NOT LIVE: normal grid, no callout</li>
+          <li><strong>Week 1 only (match hours):</strong> Show rewards + Toss &amp; Win CTA "Play Now" → Game Page (first-time users only)</li>
+          <li>After Week 1 (match hours): revert to normal PT grid</li>
+          <li>Users who've played today (match hours): normal grid, no callout</li>
+          <li><strong>Off-match hours (always):</strong> PT banner shows next game start time — present for all users at all times during off-hours</li>
         </ul>
       </div>
       <div class="card">
@@ -900,16 +906,16 @@
           <li>Auto-added to cart if won today</li>
           <li>Pop-up shown on auto-add</li>
           <li>If removed → no re-auto-add</li>
-          <li>Up to 2 freebies can be active</li>
+          <li>Unlimited freebies can be active and applied</li>
         </ul>
       </div>
       <div class="reward-card reward-bogo">
         <div class="reward-title">🔁 BOGO</div>
         <ul class="bullet-list" style="margin-top:8px;">
           <li>"Complete your offer" rail in cart</li>
-          <li>Only 1 BOGO at a time</li>
-          <li>Multiple BOGOs → select from Rewards Page</li>
-          <li>Can combine: 1 BOGO + 1 freebie</li>
+          <li>Multiple BOGOs can be used simultaneously</li>
+          <li>Manage BOGOs from Rewards Page (UX: TBD)</li>
+          <li>Eligible product cards show BOGO badge when won</li>
         </ul>
       </div>
       <div class="reward-card reward-nothing">
@@ -950,18 +956,18 @@
 
   <div class="section">
     <h2>Selection &amp; Stacking Rules</h2>
-    <div class="callout callout-warn">
-      <div class="callout-icon">🧮</div>
+    <div class="callout callout-info">
+      <div class="callout-icon">✅</div>
       <div class="callout-content">
-        <div class="callout-title">Max 2 Offers per Order</div>
-        <div class="callout-body">User can select up to 2 offers: either 2 freebies OR 1 BOGO + 1 freebie. Cannot select 2 BOGOs simultaneously.</div>
+        <div class="callout-title">Unlimited Offers per Order</div>
+        <div class="callout-body">Users can apply unlimited offers. Multiple BOGOs and freebies can all be active on the same order. UX for selecting multiple BOGOs is TBD.</div>
       </div>
     </div>
-    <div class="callout callout-error">
-      <div class="callout-icon">🚫</div>
+    <div class="callout callout-info">
+      <div class="callout-icon">✅</div>
       <div class="callout-content">
-        <div class="callout-title">No Stacking with BISTRO50</div>
-        <div class="callout-body">Game rewards cannot be combined with the BISTRO50 promo code. Enforce at cart validation.</div>
+        <div class="callout-title">Stackable with BISTRO50 &amp; 50% Off</div>
+        <div class="callout-body">Game rewards can be combined with BISTRO50 and any 50% off promo codes. No stacking restriction applies.</div>
       </div>
     </div>
     <div class="callout callout-info">
@@ -991,8 +997,8 @@
     </div>
 
     <div class="edge-case edge-solved">
-      <div class="edge-title"><span class="tag tag-green">✓ SOLVED</span> CR = 0 → CR = 1 transition</div>
-      <div class="edge-body">When a user transitions from CR=0 to CR=1, the feed and all other pages must update instantly to show game entry points (FAB animation, PT callout if applicable).</div>
+      <div class="edge-title"><span class="tag tag-green">✓ SOLVED</span> CR = 0 eligibility &amp; CR = 0 → CR = 1 transition</div>
+      <div class="edge-body">CR = 0 users are eligible to play. When a user transitions from CR=0 to CR=1, the feed and all other pages must update instantly to show game entry points (FAB animation, PT callout if applicable).</div>
     </div>
 
     <div class="edge-case edge-solved">
@@ -1002,26 +1008,35 @@
   </div>
 
   <div class="section">
-    <h2>Unsolved / Open Questions</h2>
+    <h2>Additional Solved Cases</h2>
 
-    <div class="edge-case edge-unsolved">
-      <div class="edge-title"><span class="tag tag-yellow">⚠️ UNSOLVED</span> Freebie item is out of stock</div>
-      <div class="edge-body">What happens when a freebie item that was won is no longer in stock? Substitution? Void the reward? Show alternate?</div>
+    <div class="edge-case edge-solved">
+      <div class="edge-title"><span class="tag tag-green">✓ SOLVED</span> Multiple BOGOs</div>
+      <div class="edge-body">Users can use multiple BOGOs on a single order. UX for selecting and managing multiple BOGOs simultaneously is TBD — to be designed in a future sprint.</div>
     </div>
 
-    <div class="edge-case edge-unsolved">
-      <div class="edge-title"><span class="tag tag-yellow">⚠️ UNSOLVED</span> Match ends early (rain / quick wickets)</div>
-      <div class="edge-body">Should the game be stopped if the match ends early? What defines "match over" for game purposes?</div>
+    <div class="edge-case edge-solved">
+      <div class="edge-title"><span class="tag tag-green">✓ SOLVED</span> Freebie item is out of stock</div>
+      <div class="edge-body">Avoid this through proactive inventory planning. Offers will be designed around items with sufficient stock. No reactive fallback — prevention is the strategy.</div>
     </div>
 
-    <div class="edge-case edge-unsolved">
-      <div class="edge-title"><span class="tag tag-yellow">⚠️ UNSOLVED</span> Match goes to Super Over</div>
-      <div class="edge-body">Should the game window be extended beyond regular hours if the match extends to a Super Over?</div>
+    <div class="edge-case edge-solved">
+      <div class="edge-title"><span class="tag tag-green">✓ SOLVED</span> Match ends early (rain / quick wickets)</div>
+      <div class="edge-body">Game runs for the entire scheduled match duration regardless of early finish. No early cutoff for rain or quick fall of wickets.</div>
     </div>
 
+    <div class="edge-case edge-solved">
+      <div class="edge-title"><span class="tag tag-green">✓ SOLVED</span> Match goes to Super Over</div>
+      <div class="edge-body">Game window is NOT extended for Super Overs. The game ends at the scheduled match end time. Super Over extension can be planned for V2.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Open Questions</h2>
+
     <div class="edge-case edge-unsolved">
-      <div class="edge-title"><span class="tag tag-yellow">⚠️ UNSOLVED</span> Order cancellation after offer applied</div>
-      <div class="edge-body">If a user applies a reward (freebie/BOGO) and then cancels the order — what happens to the reward? Is it reinstated? Marked as used?</div>
+      <div class="edge-title"><span class="tag tag-yellow">⚠️ OPEN</span> Order cancellation after offer applied</div>
+      <div class="edge-body">Scope: applies to cancellations where Bistro is at fault — PNA (product not available), rider mistakes, or other Bistro-side errors. What happens to the reward in these cases? Reinstate? Mark as used? Policy TBD.</div>
     </div>
   </div>
 </div>
@@ -1077,7 +1092,7 @@
           <td>
             <ul>
               <li>Active, Used, Expired rewards</li>
-              <li>Select up to 2 to apply</li>
+              <li>Select unlimited offers to apply</li>
               <li>If 0 rewards: "Tune in tomorrow" + countdown</li>
             </ul>
           </td>
@@ -1088,8 +1103,8 @@
           <td><span class="tag tag-orange">No</span></td>
           <td>
             <ul>
-              <li>Normal grid. No callout.</li>
-              <li>No coin animation</li>
+              <li>PT banner: next game start time (always on)</li>
+              <li>No coin animation on FAB</li>
             </ul>
           </td>
           <td><ul><li>Static coin</li><li>→ Game Page</li></ul></td>
@@ -1134,7 +1149,7 @@
           <td>
             <ul>
               <li>Active, Used, Expired</li>
-              <li>Select up to 2</li>
+              <li>Select unlimited offers</li>
             </ul>
           </td>
         </tr>
@@ -1144,7 +1159,7 @@
           <td><span class="tag tag-orange">No</span></td>
           <td>
             <ul>
-              <li>Normal PT grid</li>
+              <li>PT banner: next game start time (always on)</li>
               <li>Banner (if reward won today and not used)</li>
               <li>No coin animation on FAB</li>
               <li>Offer strip: show reward if won today</li>
@@ -1167,7 +1182,7 @@
           <td>
             <ul>
               <li>Active, Used, Expired</li>
-              <li>Select up to 2</li>
+              <li>Select unlimited offers</li>
             </ul>
           </td>
         </tr>
@@ -1248,7 +1263,7 @@
     Note over Feed: PT reverts to normal grid after IPL Week 1
     Note over User, Crystal: Scenario B — Never Played, Game NOT LIVE
     User ->> Feed: Opens app
-    Feed ->> User: PT: Normal grid, no callout
+    Feed ->> User: PT banner: next game start time (always on during off-hours)
     Feed ->> User: FAB: Static coin visible
     User ->> GamePage: Taps FAB
     GamePage ->> User: Countdown to next game + rewards won + FAQ
@@ -1277,7 +1292,7 @@
     Crystal ->> User: Entry point to Game Page
     Note over User, Crystal: Scenario E — Played Before, Game NOT LIVE
     User ->> Feed: Opens app
-    Feed ->> User: PT: Normal grid, no callout
+    Feed ->> User: PT banner: next game start time (always on during off-hours)
     Feed ->> User: FAB: Static coin, no animation
     User ->> GamePage: Taps FAB
     GamePage ->> User: Countdown to next game + rewards won + FAQ
@@ -1314,10 +1329,10 @@
     RewardsPage ->> User: Show all rewards — Active, Used, Expired
     RewardsPage ->> User: Sorted: Won today first, then by recency
     RewardsPage ->> User: Tagged: Won today / Expiring on XX
-    User ->> RewardsPage: Selects up to 2 offers
-    Note over RewardsPage: Max 2 offers: 2 freebies OR 1 BOGO + 1 freebie
+    User ->> RewardsPage: Selects offers (unlimited)
+    Note over RewardsPage: Unlimited offers: multiple BOGOs and freebies allowed
     RewardsPage ->> Cart: Selected offers reflect in Cart
-    Note over Cart: Cannot stack with BISTRO50
+    Note over Cart: Can stack with BISTRO50 and 50% off promos
     Note over User, GamePage: User has no rewards
     User ->> RewardsPage: Taps View your Rewards
     RewardsPage ->> User: Tune in tomorrow to play and win
